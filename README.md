@@ -6,11 +6,17 @@ The numeric solution of the given system of equetions is performed here by using
 Runge–Kutta method.
 
 To build code use 
+    
     make
+    
 To run the result
+    
     make run_test
+    
 or better use 
+    
     make release
+    
 after which in workDir will appear a directory with name revN, where N is some number form 1.
 In this directory will appear binary called CalcProj, it requaires .yaml file as it only input.
 See "test" folder for example, also please see description.yaml file for description of what should be placed 
