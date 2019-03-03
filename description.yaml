@@ -1,0 +1,31 @@
+general:
+  #here goes only two values important for ccs framework
+  uuid: 7b4ed5f5-dd3d-41bb-8357-fa01978bc8ab
+  #name of the project, required for searching this project in the whole library
+  name: FibersCubicGauss
+  description: |
+    here goes sample description
+parameters:
+  #parameters are double named numbers which influence on result of calculation
+  #parameters are defined as a list of maps with two fields: name , description
+  - name: sample_parameter
+    description: this is a sample parameter
+  - name: another_parameter
+    description: another sample parameter
+properties:
+  #properties are values which influence the calculation process but not the result 
+  #(except some accuracy issues)
+  #ccs introduce two default properties: output_path, and tmp_path
+  #output_path - the destination, where to put the result .nc file
+  #tmp_path - folder where could be placed some tmp files. ccs will check for this folder and delete it after the work finished (with success or failure)
+  #you should not redefine this properties
+  #Here should go the list of items, each of which describes single property
+  - name: sample_property
+    optional: true # a boolean property which shows if this property is required for calculation. Default: false 
+    list: false #flag to show that if need to set a list of properties here. Default: false
+    type: int #shows the type of the property: currently we support only int, string, float, boolean  
+outputs:
+  #a list of outputs which calculator will generate. Should be defined as a list of items
+  - name: sample_output
+    description: this is an example of output item
+
