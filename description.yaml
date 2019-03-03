@@ -4,14 +4,29 @@ general:
   #name of the project, required for searching this project in the whole library
   name: FibersCubicGauss
   description: |
-    here goes sample description
+    This project is a calculation programm to model quantum properties of light propagation
+    along an array of single mode waveguides with cubic nonliniarity. Calculation is performed 
+    in assumption of that quantum state of light is gaussian. This allows to write a
+    closed system of ordinary differential equations based on Heizenberg approach.
+    The numeric solution of the given system of equetions is performed here by using 4th order
+    Runge–Kutta method.
 parameters:
-  #parameters are double named numbers which influence on result of calculation
+  #parameters are double, named numbers which influence on result of calculation
   #parameters are defined as a list of maps with two fields: name , description
-  - name: sample_parameter
-    description: this is a sample parameter
-  - name: another_parameter
-    description: another sample parameter
+  - name: dt
+    description: time difference between two consecutive calculating steps
+  - name: Nsteps
+    description: number of calculating time steps
+  - name: Nout
+    description: number of time marks at which desired values will be calculated
+  - name: Nfibs
+    description: number of waveguides in the array
+  - name: Nfibs_calc
+    description: size of waveguides subarray near the central one, for which will be calculated logarithmic negativity (for each pair in subarray)
+  - name: L
+    description: nonlinearity coefficient
+  - name: alpha
+    description: amplitude of light field in the central waveguide at the input of the array
 properties:
   #properties are values which influence the calculation process but not the result 
   #(except some accuracy issues)
@@ -20,12 +35,15 @@ properties:
   #tmp_path - folder where could be placed some tmp files. ccs will check for this folder and delete it after the work finished (with success or failure)
   #you should not redefine this properties
   #Here should go the list of items, each of which describes single property
-  - name: sample_property
-    optional: true # a boolean property which shows if this property is required for calculation. Default: false 
+  - name: cuda_device
+    optional: false # a boolean property which shows if this property is required for calculation. Default: false 
     list: false #flag to show that if need to set a list of properties here. Default: false
     type: int #shows the type of the property: currently we support only int, string, float, boolean  
 outputs:
   #a list of outputs which calculator will generate. Should be defined as a list of items
-  - name: sample_output
-    description: this is an example of output item
-
+  - name: time
+    description: The array with Nout elements with values of time marks at which all other values were calculated
+  - name: I
+    description: The array with size Nout*Nfibs with values of mean photon number in each waveguide calculated at time markes defined in "time" output
+  - name: EN
+    description: The array with size Nout*Nfibs_calc*Nfibs_calc with logarithmic negativity values, calculated for each pair in subarray of size Nfibs_calc near central waveguide
