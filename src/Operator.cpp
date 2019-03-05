@@ -386,11 +386,310 @@ void DI_im_maker(std::list<OperatorElement>& in, const std::vector<double>& para
 void Da_re_maker(std::list<OperatorElement>& in, const std::vector<double>& parameters, const unsigned int n, const unsigned int m)
 {
     unsigned int nfibs = (unsigned int)Nfibs;
+    if(n != 0)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = (n==m)? -2.0 : -1.0;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_i(n - 1, m);
+    }
+    if(m != nfibs-1)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = (n==m)? -2.0 : -1.0;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_i(n, m + 1);
+    }
+    if(m !=0 && m != n)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = -1.0;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_i(n, m - 1);
+    }
+    if((n != nfibs - 1) && (m != n))
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = -1.0;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_i(n + 1, m);
+    }
+    //-------------------------------------------
+    in.push_back(OperatorElement());
+    in.back().coe = -2.0*L;
+    in.back().ind1 = one;
+    in.back().ind2 = DI_r(n,n);
+    in.back().ind3 = Da_i(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = -2.0*L;
+    in.back().ind1 = one;
+    in.back().ind2 = DI_r(m,m);
+    in.back().ind3 = Da_i(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = -2.0*L;
+    in.back().ind1 = al_r(m);
+    in.back().ind2 = al_r(m);
+    in.back().ind3 = Da_i(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = -2.0*L;
+    in.back().ind1 = al_i(m);
+    in.back().ind2 = al_i(m);
+    in.back().ind3 = Da_i(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = -2.0*L;
+    in.back().ind1 = al_r(n);
+    in.back().ind2 = al_r(n);
+    in.back().ind3 = Da_i(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = -2.0*L;
+    in.back().ind1 = al_i(n);
+    in.back().ind2 = al_i(n);
+    in.back().ind3 = Da_i(n,m);
+    //---------------------------------
+    
+    in.push_back(OperatorElement());
+    in.back().coe = -1.0*L;
+    in.back().ind1 = one;
+    in.back().ind2 = Da_i(n,n);
+    in.back().ind3 = DI_r(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = -1.0*L;
+    in.back().ind1 = one;
+    in.back().ind2 = Da_i(m,m);
+    in.back().ind3 = DI_r(n,m);
+    
+    in.push_back(OperatorElement());
+    in.back().coe = -2.0*L;
+    in.back().ind1 = al_r(n);
+    in.back().ind2 = al_i(n);
+    in.back().ind3 = DI_r(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = -2.0*L;
+    in.back().ind1 = al_r(m);
+    in.back().ind2 = al_i(m);
+    in.back().ind3 = DI_r(n,m);
+
+    if(n!=m)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = 1.0*L;
+        in.back().ind1 = one;
+        in.back().ind2 = Da_r(m,m);
+        in.back().ind3 = DI_i(n,m);
+        
+        in.push_back(OperatorElement());
+        in.back().coe = -1.0*L;
+        in.back().ind1 = one;
+        in.back().ind2 = Da_r(n,n);
+        in.back().ind3 = DI_i(n,m);
+        
+        in.push_back(OperatorElement());
+        in.back().coe = -1.0*L;
+        in.back().ind1 = al_r(n);
+        in.back().ind2 = al_r(n);
+        in.back().ind3 = DI_i(n,m);
+        
+        in.push_back(OperatorElement());
+        in.back().coe = 1.0*L;
+        in.back().ind1 = al_r(m);
+        in.back().ind2 = al_r(m);
+        in.back().ind3 = DI_i(n,m);
+        
+        in.push_back(OperatorElement());
+        in.back().coe = -1.0*L;
+        in.back().ind1 = al_i(m);
+        in.back().ind2 = al_i(m);
+        in.back().ind3 = DI_i(n,m);
+        
+        in.push_back(OperatorElement());
+        in.back().coe = 1.0*L;
+        in.back().ind1 = al_i(n);
+        in.back().ind2 = al_i(n);
+        in.back().ind3 = DI_i(n,m);
+    }
+    
+    if(n == m)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = -2.0*L;
+        in.back().ind1 = al_r(m);
+        in.back().ind2 = al_i(m);
+        in.back().ind3 = one;
+        
+        in.push_back(OperatorElement());
+        in.back().coe = -1.0*L;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_i(m,m);
+    }
 }
 
 void Da_im_maker(std::list<OperatorElement>& in, const std::vector<double>& parameters, const unsigned int n, const unsigned int m)
 {
     unsigned int nfibs = (unsigned int)Nfibs;
+    if(n != 0)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = (n==m)? 2.0 : 1.0;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_r(n - 1, m);
+    }
+    if(m != nfibs-1)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = (n==m)? 2.0 : 1.0;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_r(n, m + 1);
+    }
+    if(m !=0 && m != n)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = 1.0;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_r(n, m - 1);
+    }
+    if((n != nfibs - 1) && (m != n))
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = 1.0;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_r(n + 1, m);
+    }
+
+    in.push_back(OperatorElement());
+    in.back().coe = 2.0*L;
+    in.back().ind1 = one;
+    in.back().ind2 = DI_r(n,n);
+    in.back().ind3 = Da_r(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = 2.0*L;
+    in.back().ind1 = one;
+    in.back().ind2 = DI_r(m,m);
+    in.back().ind3 = Da_r(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = 2.0*L;
+    in.back().ind1 = al_r(m);
+    in.back().ind2 = al_r(m);
+    in.back().ind3 = Da_r(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = 2.0*L;
+    in.back().ind1 = al_i(m);
+    in.back().ind2 = al_i(m);
+    in.back().ind3 = Da_r(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = 2.0*L;
+    in.back().ind1 = al_r(n);
+    in.back().ind2 = al_r(n);
+    in.back().ind3 = Da_r(n,m);
+
+    in.push_back(OperatorElement());
+    in.back().coe = 2.0*L;
+    in.back().ind1 = al_i(n);
+    in.back().ind2 = al_i(n);
+    in.back().ind3 = Da_r(n,m);
+    //----------------------------------------
+    in.push_back(OperatorElement());
+    in.back().coe = 1.0*L;
+    in.back().ind1 = one;
+    in.back().ind2 = Da_r(m,m);
+    in.back().ind3 = DI_r(n,m);
+    
+    in.push_back(OperatorElement());
+    in.back().coe = 1.0*L;
+    in.back().ind1 = one;
+    in.back().ind2 = Da_r(n,n);
+    in.back().ind3 = DI_r(n,m);
+    
+    in.push_back(OperatorElement());
+    in.back().coe = 1.0*L;
+    in.back().ind1 = al_r(n);
+    in.back().ind2 = al_r(n);
+    in.back().ind3 = DI_r(n,m);
+    
+    in.push_back(OperatorElement());
+    in.back().coe = 1.0*L;
+    in.back().ind1 = al_r(m);
+    in.back().ind2 = al_r(m);
+    in.back().ind3 = DI_r(n,m);
+    
+    in.push_back(OperatorElement());
+    in.back().coe = -1.0*L;
+    in.back().ind1 = al_i(m);
+    in.back().ind2 = al_i(m);
+    in.back().ind3 = DI_r(n,m);
+    
+    in.push_back(OperatorElement());
+    in.back().coe = -1.0*L;
+    in.back().ind1 = al_i(n);
+    in.back().ind2 = al_i(n);
+    in.back().ind3 = DI_r(n,m);
+    
+    if(n!=m)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = -1.0*L;
+        in.back().ind1 = one;
+        in.back().ind2 = Da_i(n,n);
+        in.back().ind3 = DI_i(n,m);
+    
+        in.push_back(OperatorElement());
+        in.back().coe = 1.0*L;
+        in.back().ind1 = one;
+        in.back().ind2 = Da_i(m,m);
+        in.back().ind3 = DI_i(n,m);
+        
+        in.push_back(OperatorElement());
+        in.back().coe = -2.0*L;
+        in.back().ind1 = al_r(n);
+        in.back().ind2 = al_i(n);
+        in.back().ind3 = DI_i(n,m);
+    
+        in.push_back(OperatorElement());
+        in.back().coe = 2.0*L;
+        in.back().ind1 = al_r(m);
+        in.back().ind2 = al_i(m);
+        in.back().ind3 = DI_i(n,m);
+    }
+    
+    if(n==m)
+    {
+        in.push_back(OperatorElement());
+        in.back().coe = 1.0*L;
+        in.back().ind1 = one;
+        in.back().ind2 = one;
+        in.back().ind3 = Da_r(m,m);
+        
+        in.push_back(OperatorElement());
+        in.back().coe = 1.0*L;
+        in.back().ind1 = al_r(m);
+        in.back().ind2 = al_r(m);
+        in.back().ind3 = one;
+        
+        in.push_back(OperatorElement());
+        in.back().coe = -1.0*L;
+        in.back().ind1 = al_i(m);
+        in.back().ind2 = al_i(m);
+        in.back().ind3 = one;
+    }
 }
 
 std::vector<std::list<OperatorElement> >  build_oper_pre(const std::vector<double>& parameters, unsigned int dim)

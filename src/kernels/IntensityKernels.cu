@@ -7,9 +7,9 @@
 __global__ void DeviceMakeIntensity(double* out, const double* in, const unsigned int nfibs)
 {
     unsigned int id = blockIdx.x*blockDim.x+threadIdx.x;
-    if(id < 256)
+    if(id < nfibs)
     {
-        out[id] = 6.0;//in[DI_r(id,id)] + in[al_r(id)]*in[al_r(id)] + in[al_i(id)]*in[al_i(id)];
+        out[id] = in[DI_r(id,id)] + in[al_r(id)]*in[al_r(id)] + in[al_i(id)]*in[al_i(id)];
     }
 }
 
