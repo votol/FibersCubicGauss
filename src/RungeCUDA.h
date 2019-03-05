@@ -3,11 +3,12 @@
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 #include <vector>
+#include <list>
 #include <memory>
 #include <chrono>
 #include <string>
 #include "OperatorInterface.h"
-#include "OutputInterface.h"
+#include "OutputCaclulatorInterface.h"
 
 
 class RungeCUDA
@@ -22,10 +23,10 @@ class RungeCUDA
 
 	std::vector<double>* parameters;
 	std::unique_ptr<IOperator>* operator_pointer;
-	std::vector<cuDoubleComplex>* init_state;
-	std::vector<std::unique_ptr<IOutput> >* outputs;
+    std::vector<double>* init_state;
+    std::list<IOutputCalculator*>* outputs;
 
-	cuDoubleComplex* vectors;
+    double* vectors;
 
 	double output_coe;
 	std::chrono::high_resolution_clock::time_point t2;
@@ -43,14 +44,15 @@ public:
 	RungeCUDA();
 	~RungeCUDA();
 	void Calculate(void);
-	void SetTimeStep(const double&);
+    void SetDimension(const unsigned int& in);
+    void SetTimeStep(const double&);
 	void SetStepsNumber(const unsigned int&);
 	void SetOutputSteps(const unsigned int&);
 	void SetCudaDeviceNumber(const unsigned int&);
 	void SetParameters(std::vector<double>&);
 	void SetOperator(std::unique_ptr<IOperator>&);
-	void SetInitState(std::vector<cuDoubleComplex>&);
-	void SetOutputs(std::vector<std::unique_ptr<IOutput> > &);
+    void SetInitState(std::vector<double>&);
+    void SetOutputs(std::list<IOutputCalculator*> &);
 };
 
 

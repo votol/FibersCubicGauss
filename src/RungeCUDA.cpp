@@ -6,13 +6,7 @@
 #include <thread>
 #include <fstream>
 #include "RungeCUDA.h"
-#include "ParameterDefines.h"
 #include <iostream>
-
-int GetDim(const std::vector<double>& parameters)
-{
-	return int(width)*int(width)*6;
-}
 
 int RungeCUDA::Get_temperature(void)
     {
@@ -68,43 +62,44 @@ void RungeCUDA::one_trajectory(void)
 	double current_output=0.0;
 	int output_number = 0;
 	unsigned int peri;
-	cuDoubleComplex koe;
-	koe.y=0.0;
+    double koe;
+    koe=0.0;
 	for(peri=0;peri<Nsteps;++peri)
 	{
 		if(int(current_output)>=output_number)
 		{
-			for(auto it = outputs->begin();it!=outputs->end();++it)
+            for(auto it = outputs->begin();it!=outputs->end();++it)
 				(*it)->proceed(vectors,*parameters);
 			output_number++;
 		}
-		cublasZcopy(blas_handle,DIM,vectors,1,vectors + DIM,1);
+        cublasDcopy(blas_handle,DIM,vectors,1,vectors + DIM,1);
 		(*operator_pointer)->apply(vectors +2*DIM, vectors,*parameters);
-		koe.x=dt/6.0;
-		cublasZaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
-		cublasZcopy(blas_handle,DIM,vectors,1,vectors + 3*DIM,1);
-		koe.x=dt/2.0;
-		cublasZaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + 3*DIM,1);
+        koe=dt/6.0;
+        cublasDaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
+        cublasDcopy(blas_handle,DIM,vectors,1,vectors + 3*DIM,1);
+        koe=dt/2.0;
+        cublasDaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + 3*DIM,1);
 		(*parameters)[0] += dt/2.0;
 		(*operator_pointer)->apply(vectors +2*DIM, vectors + 3*DIM,*parameters);
-		koe.x=dt/3.0;
-		cublasZaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
-		cublasZcopy(blas_handle,DIM,vectors,1,vectors + 3*DIM,1);
-		koe.x=dt/2.0;
-		cublasZaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + 3*DIM,1);
+        koe=dt/3.0;
+        cublasDaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
+        cublasDcopy(blas_handle,DIM,vectors,1,vectors + 3*DIM,1);
+        koe=dt/2.0;
+        cublasDaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + 3*DIM,1);
 		(*operator_pointer)->apply(vectors +2*DIM, vectors + 3*DIM,*parameters);
-		koe.x=dt/3.0;
-		cublasZaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
-		cublasZcopy(blas_handle,DIM,vectors,1,vectors + 3*DIM,1);
-		koe.x=dt;
-		cublasZaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + 3*DIM,1);
+        koe=dt/3.0;
+        cublasDaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
+        cublasDcopy(blas_handle,DIM,vectors,1,vectors + 3*DIM,1);
+        koe=dt;
+        cublasDaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + 3*DIM,1);
 		(*parameters)[0] += dt/2.0;
 		(*operator_pointer)->apply(vectors +2*DIM, vectors + 3*DIM,*parameters);
-		koe.x=dt/6.0;
-		cublasZaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
-		cublasZcopy(blas_handle,DIM,vectors+DIM,1,vectors,1);
+        koe=dt/6.0;
+        cublasDaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
+        cublasDcopy(blas_handle,DIM,vectors+DIM,1,vectors,1);
 		current_output += output_coe;
-		interruption();
+        (*parameters)[0] += dt;
+        interruption();
 	}
 }
 
@@ -116,7 +111,7 @@ RungeCUDA::RungeCUDA():dt(0.0),Nsteps(0),Noutputs(0),Nrelaxations(0),CudaDeviceN
 	t2=t1;
 	boost::uuids::uuid uuid = boost::uuids::random_generator()();
 	file_uuid = boost::uuids::to_string(uuid);
-	vectors = NULL;
+    vectors = NULL;
 	cublasCreate(&blas_handle);
 }
 RungeCUDA::~RungeCUDA()
@@ -125,14 +120,18 @@ RungeCUDA::~RungeCUDA()
 }
 void RungeCUDA::Calculate(void)
 {
-	DIM = GetDim(*parameters);
-	cudaMalloc((void**)&vectors, 4*DIM*sizeof(vectors[0]));
+    cudaMalloc((void**)&vectors, 4*DIM*sizeof(vectors[0]));
 	output_coe = double(Noutputs)/double(Nsteps);
 	(*parameters)[0] =0.0;
 	cudaMemcpy(vectors, init_state->data(),DIM*sizeof(vectors[0]),cudaMemcpyHostToDevice);
 	one_trajectory();
 	cudaFree(vectors);
 }
+void RungeCUDA::SetDimension(const unsigned int& in)
+{
+    DIM = in;
+}
+
 void RungeCUDA::SetTimeStep(const double& in)
 {
 	dt=in;
@@ -157,12 +156,12 @@ void RungeCUDA::SetOperator(std::unique_ptr<IOperator>& in)
 {
 	operator_pointer = &in;
 }
-void RungeCUDA::SetInitState(std::vector<cuDoubleComplex>& in)
+void RungeCUDA::SetInitState(std::vector<double>& in)
 {
 	init_state = &in;
 }
-void RungeCUDA::SetOutputs(std::vector<std::unique_ptr<IOutput> > & in)
+void RungeCUDA::SetOutputs(std::list<IOutputCalculator*>& in)
 {
-	outputs = &in;
+    outputs = &in;
 }
 

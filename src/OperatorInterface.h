@@ -1,6 +1,5 @@
 #ifndef __OperatorInterface_h_
 #define __OperatorInterface_h_
-#include <cuComplex.h>
 #include <vector>
 
 class IOperator
@@ -8,7 +7,7 @@ class IOperator
 public:
 	IOperator(){};
 	virtual ~IOperator(){};
-	virtual void apply(cuDoubleComplex*, const cuDoubleComplex*,
+    virtual void apply(double*, const double*,
 			const std::vector<double>&) = 0;
 };
 

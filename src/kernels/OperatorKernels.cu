@@ -1,24 +1,27 @@
 #include "OperatorKernels.h"
 #include <cuda_runtime.h>
 #include <math.h>
-#include "ParameterDefines.h"
 
-__global__ void DeviceMakeVector(cuDoubleComplex* vec, const cuDoubleComplex* cons,
-		const cuDoubleComplex* ex, double * parameters,const unsigned int dim)
+__global__ void DeviceProceedVector(double* out, const double* in,
+        OperatorElement* oper, const unsigned int dim, const unsigned int Nfibs)
 {
-	int id = blockIdx.x*blockDim.x+threadIdx.x;
+    unsigned int id = blockIdx.x*blockDim.x+threadIdx.x;
 	if(id < dim)
 	{
-		vec[id].x = cons[id].x + ex[id].x * exp(-D*t); 
-		vec[id].y = cons[id].y + ex[id].y * exp(-D*t);
+        out[id] = 0;
+        OperatorElement* m_oper = oper + 24 * id;
+        for(unsigned int ind = 0; ind < 24; ind ++)
+        {
+            out[id] += m_oper[ind].coe * in[m_oper[ind].ind1] * in[m_oper[ind].ind2] * in[m_oper[ind].ind3];
+        }
 	}
 }
 
 
 
-void MakeVector(cuDoubleComplex* vec, const cuDoubleComplex* cons,
-		const cuDoubleComplex* ex, double * params,const unsigned int& dim)
+void ProceedVector(double* out, const double* in,
+        OperatorElement* oper, const unsigned int& dim, const unsigned int& Nfibs)
 {
-	DeviceMakeVector<<<dim/128 +1, 128>>>(vec,cons,ex,params,dim);
+    DeviceProceedVector<<<dim/128 +1, 128>>>(out, in, oper, dim, Nfibs);
 }
 

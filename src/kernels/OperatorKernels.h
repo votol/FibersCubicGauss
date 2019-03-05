@@ -1,7 +1,7 @@
 #ifndef __OperatorKernels_h_
 #define __OperatorKernels_h_
-#include "cuComplex.h"
+#include "OperatorElement.h"
 
-extern void MakeVector(cuDoubleComplex*, const cuDoubleComplex* cons,
-		const cuDoubleComplex* ex, double *,const unsigned int&);
+extern void ProceedVector(double* out, const double* in,
+        OperatorElement* oper, const unsigned int& dim, const unsigned int& Nfibs);
 #endif /*__OperatorKernels_h_*/

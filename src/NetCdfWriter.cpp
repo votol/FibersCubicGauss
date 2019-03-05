@@ -4,7 +4,7 @@
 using namespace netCDF;
 using namespace netCDF::exceptions;
 
-NetCdfWriter::NetCdfWriter(const std::string & n, std::vector<std::unique_ptr<IOutput> >& outs, const unsigned int& Tsteps)
+NetCdfWriter::NetCdfWriter(const std::string & n, std::list<IOutput*> & outs, const unsigned int& Tsteps)
 {
 	NcFile NcFile_instatnce(n, NcFile::replace);
 	NcDim timeDim = NcFile_instatnce.addDim("time", Tsteps);

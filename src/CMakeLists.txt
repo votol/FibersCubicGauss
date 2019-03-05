@@ -7,6 +7,7 @@ set (SOURCES main.cpp
              NetCdfWriter.h
              Operator.cpp
              Operator.h
+             OperatorElement.h
              OperatorInterface.h
              OutputCaclulatorInterface.h
              OutputEntanglement.cpp
@@ -19,6 +20,7 @@ set (SOURCES main.cpp
              ParametersInit.h
              RungeCUDA.cpp
              RungeCUDA.h
+             Indexes.h
              complex.h
              )
 
@@ -38,6 +40,7 @@ get_filename_component(PARENT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 include_directories (${CMAKE_CURRENT_BINARY_DIR})
 include_directories (${CUDA_INCLUDE_DIRS})
 include_directories (./kernels)
+include_directories (./)
 include_directories (~/include)
 
 add_executable(${PROJECT_NAME}

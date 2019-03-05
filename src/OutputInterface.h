@@ -7,8 +7,8 @@
 class IOutput
 {
 public:
-	IOutput(){};
-	virtual ~IOutput(){};
+    IOutput(){}
+    virtual ~IOutput(){}
 	virtual const std::string& GetName() = 0;
 	virtual const std::vector<double>& GetData() = 0;
 	virtual const std::vector<size_t>& GetDimensions() = 0;
