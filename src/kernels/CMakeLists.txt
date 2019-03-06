@@ -7,7 +7,9 @@ set (SOURCES OperatorKernels.cu
              EntanglementKernels.cu
              EntanglementKernels.h
              IntensityKernels.cu
-             IntensityKernels.h)
+             IntensityKernels.h
+             SqueezeKernels.cu
+             SqueezeKernels.h)
 
 SET(CUDA_PROPAGATE_HOST_FLAGS OFF)
 if(CUDA_VERSION_MAJOR MATCHES 5)

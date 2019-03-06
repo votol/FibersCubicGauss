@@ -14,6 +14,8 @@ set (SOURCES main.cpp
              OutputEntanglement.h
              OutputIntensity.cpp
              OutputIntensity.h
+             OutputSqueeze.cpp
+             OutputSqueeze.h
              OutputInterface.h
              ParameterDefines.h
              ParametersInit.cpp

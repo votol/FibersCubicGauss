@@ -45,5 +45,7 @@ outputs:
     description: The array with Nout elements with values of time marks at which all other values were calculated
   - name: I
     description: The array with size Nout*Nfibs with values of mean photon number in each waveguide calculated at time markes defined in "time" output
+  - name: Sq
+    description: The array with size Nout*Nfibs*30 with squeezeing values
   - name: EN
     description: The array with size Nout*Nfibs_calc*Nfibs_calc with logarithmic negativity values, calculated for each pair in subarray of size Nfibs_calc near central waveguide
