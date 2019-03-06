@@ -48,13 +48,13 @@ void alpha_re_maker(std::list<OperatorElement>& in, const std::vector<double>& p
     in.back().ind3 = al_i(n);
 
     in.push_back(OperatorElement());
-    in.back().coe = -2.0*L;
+    in.back().coe = -1.0*L;
     in.back().ind1 = one;
     in.back().ind2 = Da_i(n,n);
     in.back().ind3 = al_r(n);
 
     in.push_back(OperatorElement());
-    in.back().coe = 2.0*L;
+    in.back().coe = 1.0*L;
     in.back().ind1 = one;
     in.back().ind2 = Da_r(n,n);
     in.back().ind3 = al_i(n);
@@ -100,13 +100,13 @@ void alpha_im_maker(std::list<OperatorElement>& in, const std::vector<double>& p
     in.back().ind3 = al_r(n);
 
     in.push_back(OperatorElement());
-    in.back().coe = 2.0*L;
+    in.back().coe = 1.0*L;
     in.back().ind1 = one;
     in.back().ind2 = Da_r(n,n);
     in.back().ind3 = al_r(n);
 
     in.push_back(OperatorElement());
-    in.back().coe = 2.0*L;
+    in.back().coe = 1.0*L;
     in.back().ind1 = one;
     in.back().ind2 = Da_i(n,n);
     in.back().ind3 = al_i(n);

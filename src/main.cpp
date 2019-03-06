@@ -7,6 +7,7 @@
 #include "yaml-cpp/yaml.h"
 #include "NetCdfWriter.h"
 #include "OutputIntensity.h"
+#include "OutputEntanglement.h"
 #include "ParameterDefines.h"
 #include "schema.h"
 
@@ -40,8 +41,11 @@ int main(int argc, char **argv)
 
     OutputIntensity oIntensity(FibersCubicGaussSchema::OUTPUT_I, parameters_holder_instance.GetParameters(),
                                config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());
+    OutputEntanglement oEN(FibersCubicGaussSchema::OUTPUT_EN, parameters_holder_instance.GetParameters(),
+                               config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());
     std::list<IOutputCalculator* > outputs;
     outputs.push_back(&oIntensity);
+    outputs.push_back(&oEN);
 
     RungeCUDA runge_cuda_istatnce;
     runge_cuda_istatnce.SetCudaDeviceNumber(
@@ -58,6 +62,7 @@ int main(int argc, char **argv)
 
     std::list<IOutput* > outputsNCDF;
     outputsNCDF.push_back(&oIntensity);
+    outputsNCDF.push_back(&oEN);
     NetCdfWriter netcdf_writer_instance(
             output_dir + "/output.nc", outputsNCDF,
             config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());

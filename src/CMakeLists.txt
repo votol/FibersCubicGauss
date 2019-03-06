@@ -48,7 +48,7 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_BINARY_DIR}/schema.h
 )
 CUDA_ADD_CUBLAS_TO_TARGET(${PROJECT_NAME})
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 add_subdirectory(kernels)
 target_link_libraries (${PROJECT_NAME} ~/lib/libyaml-cpp.so
                                         netcdf_c++4
