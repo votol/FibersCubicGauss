@@ -1,3 +1,4 @@
+#include <fstream> 
 #include <iostream>
 #include <cuda_runtime.h>
 #include <string>
@@ -17,11 +18,20 @@ unsigned int GetDim_main(const std::vector<double>& parameters)
     return 1+(unsigned int)(Nfibs) * 3 + 2 * (unsigned int)(Nfibs) * (unsigned int)(Nfibs);
 }
 
-void make_init(std::vector<double>& vec, const std::vector<double>& parameters)
+void make_init(std::vector<double>& vec, const std::vector<double>& parameters, std::string& path)
 {
-    unsigned int fib_num = 1 + (unsigned int)Nfibs - ((unsigned int)Nfibs)%2;
-    vec[fib_num] = alpha;
+    std::ifstream ifs;
+    double tmpd;
+    
+    ifs.open (path + "/init.bin", std::ifstream::in | std::ifstream::binary);
+    
+    for (unsigned int ind = 0; ind < (unsigned int)Nfibs; ind ++){
+        ifs.read((char *)&tmpd, 8);
+        vec[1 + ind *2] = tmpd;
+        vec[2 + ind *2] = 0.0;
+    }
     vec[0] = 1.0;
+    ifs.close();
 }
 
 int main(int argc, char **argv)
@@ -30,13 +40,16 @@ int main(int argc, char **argv)
     std::string output_dir = config["properties"]
                      [FibersCubicGaussSchema::PROPERTY_output_path].as<std::string>();
 
+    std::string tmp_dir = config["properties"]
+                     [FibersCubicGaussSchema::PROPERTY_tmp_path].as<std::string>();
+    
     cudaSetDevice(config["properties"][FibersCubicGaussSchema::PROPERTY_cuda_device].as<unsigned int>());
     ParametersHolder parameters_holder_instance(config["parameters"]);
 
     unsigned int DIM = GetDim_main(parameters_holder_instance.GetParameters());
     std::vector<double> init_state(DIM, 0.0);
 
-    make_init(init_state, parameters_holder_instance.GetParameters());
+    make_init(init_state, parameters_holder_instance.GetParameters(), tmp_dir);
     std::unique_ptr<IOperator> operator_pointer(
                 new OperatorBase(parameters_holder_instance.GetParameters(), DIM));
 

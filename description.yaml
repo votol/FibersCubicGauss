@@ -25,8 +25,8 @@ parameters:
     description: size of waveguides subarray near the central one, for which will be calculated logarithmic negativity (for each pair in subarray)
   - name: L
     description: nonlinearity coefficient
-  - name: alpha
-    description: amplitude of light field in the central waveguide at the input of the array
+  - name: gamma
+    description: parameter which defines classic soliton profile used as initial state
 properties:
   #properties are values which influence the calculation process but not the result 
   #(except some accuracy issues)

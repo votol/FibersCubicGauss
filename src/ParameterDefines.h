@@ -4,5 +4,5 @@
 #define Nfibs parameters[1]
 #define Nfibs_calc parameters[2]
 #define L parameters[3]
-#define alpha parameters[4]
+#define gamma parameters[4]
 #endif /*__ParameterDefines_h_*/
