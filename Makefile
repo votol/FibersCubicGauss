@@ -13,9 +13,9 @@ run_test: build_test
 release: install_release
 
 install_release: build_release
-	$(eval MSG=$(shell git tag -l --format="%(contents)" -n99 ${VER}))
+	$(eval MSG_INTERNAL=$(shell git tag -l --format="%(contents)" -n99 ${VER}))
 ifneq (, $(shell which ~/bin/ccs/addProject))
-	~/bin/ccs/addProject -d $(current_dir)/description.yaml -f $(current_dir)/workDir/${VER}/CalcProj -r ${VER} -c "${MSG}"
+	~/bin/ccs/addProject -d $(current_dir)/description.yaml -f $(current_dir)/workDir/${VER}/CalcProj -r ${VER} -c "${MSG_INTERNAL}"
 endif
 
 build_release: pre_release
