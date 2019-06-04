@@ -12,10 +12,10 @@ set (SOURCES OperatorKernels.cu
              SqueezeKernels.h)
 
 SET(CUDA_PROPAGATE_HOST_FLAGS OFF)
-if(CUDA_VERSION_MAJOR MATCHES 5)
-	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}; -ccbin /usr/local/bin/g++4.6.4 -O3 -gencode arch=compute_$ENV{CUDA_ARCH},code=sm_$ENV{CUDA_ARCH})
+if(CUDA_VERSION_MAJOR MATCHES 9)
+        set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}; -ccbin /usr/bin/gcc-6 -O3 -gencode arch=compute_$ENV{CUDA_ARCH},code=sm_$ENV{CUDA_ARCH} -Xcompiler -fPIC)
 else()
-        set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}; -ccbin /usr/bin/gcc-5 -O3 -gencode arch=compute_$ENV{CUDA_ARCH},code=sm_$ENV{CUDA_ARCH} -Xcompiler -fPIC)
+        set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}; -ccbin /usr/bin/gcc-7 -O3 -gencode arch=compute_$ENV{CUDA_ARCH},code=sm_$ENV{CUDA_ARCH} -Xcompiler -fPIC)
 endif()
 include_directories (../)
 CUDA_ADD_LIBRARY(${PROJECT_NAME} ${SOURCES} STATIC)
