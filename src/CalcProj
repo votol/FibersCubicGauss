@@ -6,6 +6,7 @@ import subprocess
 import sys
 import os
 import numpy as np
+import math
 
 work_dir = os.path.dirname(os.path.realpath(__file__))
 yaml = ruamel.yaml.YAML()
@@ -16,8 +17,8 @@ yaml_stream.close()
 
 tmp_path = config["properties"]["tmp_path"]
 N_par = int(config["parameters"]["Nfibs"])
-gamma = float(config["parameters"]["gamma"])
-L = float(config["parameters"]["L"])
+gamma_result = abs(float(config["parameters"]["gamma"]))
+L = abs(float(config["parameters"]["L"]))
 
 matrix_const = np.diagflat(np.ones(N_par-1),1) + np.diagflat(np.ones(N_par-1),-1)
 
@@ -34,18 +35,34 @@ def iterate_fun(iter_par, iter_x):
 
 def init_fun(num, init_param):
     param_tmp = np.sqrt(2 * init_param )
-    return param_tmp / (np.sqrt(L) * np.cosh((num - int(N_par / 2)) * param_tmp))
+    return param_tmp / (np.sqrt(L) * np.cosh((num - int(N_par / 2) - 0.5) * param_tmp))
 
 
+gamma = 5.0
 cur_x = np.fromfunction(init_fun, (N_par,), dtype=float, init_param=gamma)
 while True:
-    tmp_x = iterate_fun(gamma, cur_x)
-    delta_x = np.max(np.abs(cur_x - tmp_x)) / np.max(cur_x)
-    cur_x = tmp_x
-    if delta_x < 1e-5 and np.max(np.abs(fun(gamma, cur_x))) < 1e-5:
+    while True:
+        tmp_x = iterate_fun(gamma, cur_x)
+        delta_x = np.max(np.abs(cur_x - tmp_x)) / np.max(cur_x)
+        cur_x = tmp_x
+        if delta_x < 1e-5 and np.max(np.abs(fun(gamma, cur_x))) < 1e-5:
+            break
+    if gamma == gamma_result:
         break
+    
+    if abs(gamma - gamma_result) < 0.1:
+        gamma = gamma_result
+    else:
+        gamma += 0.1* math.copysign(1, gamma_result - gamma)
 
+mul = 1.0
+for ind in range(len(cur_x)):
+    cur_x[ind] *= mul
+    mul *= -1.0
+
+print(cur_x)
 cur_x.tofile(tmp_path + "/init.bin")
+
 
 
 proc = subprocess.Popen([work_dir+"/CalcProj_c++", sys.argv[1]])
