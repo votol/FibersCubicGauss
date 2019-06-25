@@ -35,11 +35,12 @@ def iterate_fun(iter_par, iter_x):
 
 def init_fun(num, init_param):
     param_tmp = np.sqrt(2 * init_param )
-    return param_tmp / (np.sqrt(L) * np.cosh((num - int(N_par / 2) - 0.5) * param_tmp))
+    return 1.0*np.sign(num - int(N_par / 2)-0.5) * param_tmp / (np.sqrt(L) * np.cosh((num - int(N_par / 2)-0.5) * param_tmp))
 
 
 gamma = 5.0
 cur_x = np.fromfunction(init_fun, (N_par,), dtype=float, init_param=gamma)
+
 while True:
     while True:
         tmp_x = iterate_fun(gamma, cur_x)
@@ -55,15 +56,9 @@ while True:
     else:
         gamma += 0.1* math.copysign(1, gamma_result - gamma)
 
-mul = 1.0
-for ind in range(len(cur_x)):
-    cur_x[ind] *= mul
-    mul *= -1.0
 
 print(cur_x)
 cur_x.tofile(tmp_path + "/init.bin")
-
-
 
 proc = subprocess.Popen([work_dir+"/CalcProj_c++", sys.argv[1]])
 result = proc.wait()

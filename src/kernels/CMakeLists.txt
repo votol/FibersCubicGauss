@@ -8,6 +8,8 @@ set (SOURCES OperatorKernels.cu
              EntanglementKernels.h
              IntensityKernels.cu
              IntensityKernels.h
+             MeanKernels.cu
+             MeanKernels.h
              SqueezeKernels.cu
              SqueezeKernels.h)
 

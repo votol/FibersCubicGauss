@@ -7,7 +7,9 @@
 #include "Operator.h"
 #include "yaml-cpp/yaml.h"
 #include "NetCdfWriter.h"
+#include "OutputTime.h"
 #include "OutputIntensity.h"
+#include "OutputMean.h"
 #include "OutputEntanglement.h"
 #include "OutputSqueeze.h"
 #include "ParameterDefines.h"
@@ -53,16 +55,23 @@ int main(int argc, char **argv)
     std::unique_ptr<IOperator> operator_pointer(
                 new OperatorBase(parameters_holder_instance.GetParameters(), DIM));
 
+    
+    OutputTime ot(FibersCubicGaussSchema::OUTPUT_time, parameters_holder_instance.GetParameters(),
+                               config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());
     OutputIntensity oIntensity(FibersCubicGaussSchema::OUTPUT_I, parameters_holder_instance.GetParameters(),
                                config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());
     OutputSqueeze oSq(FibersCubicGaussSchema::OUTPUT_Sq, parameters_holder_instance.GetParameters(),
                                config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());
     OutputEntanglement oEN(FibersCubicGaussSchema::OUTPUT_EN, parameters_holder_instance.GetParameters(),
                                config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());
+    OutputMean oa2(FibersCubicGaussSchema::OUTPUT_a2, parameters_holder_instance.GetParameters(),
+                               config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());
     std::list<IOutputCalculator* > outputs;
+    outputs.push_back(&ot);
     outputs.push_back(&oIntensity);
     outputs.push_back(&oEN);
     outputs.push_back(&oSq);
+    outputs.push_back(&oa2);
 
     RungeCUDA runge_cuda_istatnce;
     runge_cuda_istatnce.SetCudaDeviceNumber(
@@ -78,9 +87,11 @@ int main(int argc, char **argv)
     runge_cuda_istatnce.Calculate();
 
     std::list<IOutput* > outputsNCDF;
+    outputsNCDF.push_back(&ot);
     outputsNCDF.push_back(&oIntensity);
     outputsNCDF.push_back(&oEN);
     outputsNCDF.push_back(&oSq);
+    outputsNCDF.push_back(&oa2);
     NetCdfWriter netcdf_writer_instance(
             output_dir + "/output.nc", outputsNCDF,
             config["parameters"][FibersCubicGaussSchema::PARAMETER_Nout].as<unsigned int>());

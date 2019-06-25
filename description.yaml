@@ -49,3 +49,5 @@ outputs:
     description: The array with size Nout*Nfibs*30 with squeezeing values
   - name: EN
     description: The array with size Nout*Nfibs_calc*Nfibs_calc with logarithmic negativity values, calculated for each pair in subarray of size Nfibs_calc near central waveguide
+  - name: a2
+    description: The array with size Nout*Nfibs with values of squared module of mean field 

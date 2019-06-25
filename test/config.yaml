@@ -4,7 +4,7 @@ parameters:
     Nout: 200
     Nfibs: 128
     Nfibs_calc: 32
-    L: -0.01
-    gamma: -5.0
+    L: 0.01
+    gamma: 10.0
 properties:
     cuda_device: 0

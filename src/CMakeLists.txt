@@ -12,6 +12,10 @@ set (SOURCES main.cpp
              OutputCaclulatorInterface.h
              OutputEntanglement.cpp
              OutputEntanglement.h
+             OutputTime.cpp
+             OutputTime.h
+             OutputMean.cpp
+             OutputMean.h
              OutputIntensity.cpp
              OutputIntensity.h
              OutputSqueeze.cpp
