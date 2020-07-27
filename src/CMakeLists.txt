@@ -70,6 +70,7 @@ set_property(TARGET ${TAR} PROPERTY CXX_STANDARD 11)
 add_subdirectory(kernels)
 target_link_libraries (${TAR} ~/lib/libyaml-cpp.so
                                         netcdf_c++4
+                                        netcdf
                                         FibersCubicKernels
                                         ${CUDA_LIBRARIES})
 

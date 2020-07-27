@@ -98,7 +98,7 @@ void RungeCUDA::one_trajectory(void)
         cublasDaxpy(blas_handle,DIM,&koe,vectors +2*DIM,1,vectors + DIM,1);
         cublasDcopy(blas_handle,DIM,vectors+DIM,1,vectors,1);
 		current_output += output_coe;
-        (*parameters)[0] += dt;
+        //(*parameters)[0] += dt;
         interruption();
 	}
 }

@@ -27,6 +27,10 @@ parameters:
     description: nonlinearity coefficient
   - name: gamma
     description: parameter which defines classic soliton profile used as initial state
+  - name: G
+    description: absorption coefficient
+  - name: type
+    description: type of the soliton soliton 1 - NLSE, 2 - sign changing soliton, 3 - soliton type 2 x2
 properties:
   #properties are values which influence the calculation process but not the result 
   #(except some accuracy issues)

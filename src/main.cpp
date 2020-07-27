@@ -15,6 +15,8 @@
 #include "ParameterDefines.h"
 #include "schema.h"
 
+#include "Indexes.h"
+#include "ParameterDefines.h"
 unsigned int GetDim_main(const std::vector<double>& parameters)
 {
     return 1+(unsigned int)(Nfibs) * 3 + 2 * (unsigned int)(Nfibs) * (unsigned int)(Nfibs);
@@ -22,6 +24,7 @@ unsigned int GetDim_main(const std::vector<double>& parameters)
 
 void make_init(std::vector<double>& vec, const std::vector<double>& parameters, std::string& path)
 {
+    unsigned int nfibs = (unsigned int)Nfibs;
     std::ifstream ifs;
     double tmpd;
     
@@ -30,8 +33,11 @@ void make_init(std::vector<double>& vec, const std::vector<double>& parameters, 
     for (unsigned int ind = 0; ind < (unsigned int)Nfibs; ind ++){
         ifs.read((char *)&tmpd, 8);
         vec[1 + ind *2] = tmpd;
+        //vec[1 + ind *2] = 0.0;
         vec[2 + ind *2] = 0.0;
     }
+    
+    //vec[DI_r(0,0)] = 100.0;
     vec[0] = 1.0;
     ifs.close();
 }

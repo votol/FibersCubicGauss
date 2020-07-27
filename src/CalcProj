@@ -19,9 +19,16 @@ tmp_path = config["properties"]["tmp_path"]
 N_par = int(config["parameters"]["Nfibs"])
 gamma_result = abs(float(config["parameters"]["gamma"]))
 L = abs(float(config["parameters"]["L"]))
+s_type = int(config["parameters"]["type"])
 
 matrix_const = np.diagflat(np.ones(N_par-1),1) + np.diagflat(np.ones(N_par-1),-1)
+matrix_const1 = np.kron(np.diagflat(np.ones(N_par-1),1) + np.diagflat(np.ones(N_par-1),-1), np.array([[1j, 0], [0, -1j]]))
 
+def stability(in_gamma, in_L, in_vec):
+    matr = matrix_const1 + np.kron(in_gamma*np.eye(N_par), np.array([[-1j, 0],[0, 1j]]))
+    matr += in_L * np.kron(np.diagflat(np.power(in_vec,2),0) , np.array([[2j, 1j],[-1j, -2j]]))
+    w, v = np.linalg.eig(matr)
+    return np.max(np.real(w))
 
 def fun(fun_param, fun_x):
     return np.matmul(matrix_const, fun_x) + L * np.power(fun_x, 3) - fun_param * fun_x
@@ -32,15 +39,27 @@ def iterate_fun(iter_par, iter_x):
                 iter_par * np.eye(N_par)
     return iter_x - np.matmul(np.linalg.inv(iter_matr), fun(iter_par, iter_x))
 
+def init_fun1(num, init_param):
+    param_tmp = np.sqrt(2 * (init_param - 2.0) )
+    return param_tmp / (np.sqrt(L) * np.cosh((num - int(N_par / 2)) * param_tmp))
 
-def init_fun(num, init_param):
-    param_tmp = np.sqrt(2 * init_param )
-    return 1.0*np.sign(num - int(N_par / 2)-0.5) * param_tmp / (np.sqrt(L) * np.cosh((num - int(N_par / 2)-0.5) * param_tmp))
+
+def init_fun3(num, init_param):
+    param_tmp = np.sqrt(2 * (init_param) )
+    return 1.0*np.sign(num - int(N_par / 2) + 0.5) * param_tmp / (np.sqrt(L) * np.cosh((num - int(N_par / 2) + 0.5) * param_tmp))
 
 
-gamma = 5.0
-cur_x = np.fromfunction(init_fun, (N_par,), dtype=float, init_param=gamma)
 
+if s_type == 1:
+    gamma = gamma_result
+    cur_x = np.fromfunction(init_fun1, (N_par,), dtype=float, init_param=gamma)
+elif s_type == 2:
+    gamma = 5.0
+    cur_x = np.fromfunction(init_fun3, (N_par,), dtype=float, init_param=gamma)
+elif s_type == 3:
+    gamma = 5.0
+    cur_x = np.fromfunction(init_fun3, (N_par,), dtype=float, init_param=gamma)
+    
 while True:
     while True:
         tmp_x = iterate_fun(gamma, cur_x)
@@ -56,8 +75,24 @@ while True:
     else:
         gamma += 0.1* math.copysign(1, gamma_result - gamma)
 
+if s_type == 3:
+    tmp_vec = np.zeros(len(cur_x), dtype = np.float);
+    tmp_vec[: int(N_par/2 - 1)] = cur_x[2 : int(N_par/2 + 1)]
+    tmp_vec[int(N_par/2 ): ] = -np.flip(cur_x[1 : int(N_par/2 + 1)])
+    cur_x = tmp_vec
+    while True:
+        tmp_x = iterate_fun(gamma, cur_x)
+        delta_x = np.max(np.abs(cur_x - tmp_x)) / np.max(cur_x)
+        cur_x = tmp_x
+        if delta_x < 1e-5 and np.max(np.abs(fun(gamma, cur_x))) < 1e-5:
+            break
 
+
+#cur_x[int(N_par / 2) - 1] = np.sqrt(100.000)
+#cur_x[int(N_par / 2)] = 0.0
 print(cur_x)
+print(stability(gamma_result, L, cur_x))
+
 cur_x.tofile(tmp_path + "/init.bin")
 
 proc = subprocess.Popen([work_dir+"/CalcProj_c++", sys.argv[1]])

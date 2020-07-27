@@ -6,7 +6,7 @@
 #include "OperatorKernels.h"
 #include "ParameterDefines.h"
 #include "Indexes.h"
-#define SUM_NUM 24
+#define SUM_NUM 25
 
 void alpha_re_maker(std::list<OperatorElement>& in, const std::vector<double>& parameters, const unsigned int n)
 {
@@ -28,6 +28,12 @@ void alpha_re_maker(std::list<OperatorElement>& in, const std::vector<double>& p
         in.back().ind2 = one;
         in.back().ind3 = al_i(n + 1);
     }
+
+    in.push_back(OperatorElement());
+    in.back().coe = - G / 2.0;
+    in.back().ind1 = one;
+    in.back().ind2 = one;
+    in.back().ind3 = al_r(n);
 
     in.push_back(OperatorElement());
     in.back().coe = -L;
@@ -80,6 +86,12 @@ void alpha_im_maker(std::list<OperatorElement>& in, const std::vector<double>& p
         in.back().ind2 = one;
         in.back().ind3 = al_r(n + 1);
     }
+
+    in.push_back(OperatorElement());
+    in.back().coe = - G / 2.0;
+    in.back().ind1 = one;
+    in.back().ind2 = one;
+    in.back().ind3 = al_i(n);
 
     in.push_back(OperatorElement());
     in.back().coe = L;
@@ -147,6 +159,12 @@ void DI_re_maker(std::list<OperatorElement>& in, const std::vector<double>& para
         in.back().ind2 = one;
         in.back().ind3 = DI_i(n + 1, m);
     }
+
+    in.push_back(OperatorElement());
+    in.back().coe = - G;
+    in.back().ind1 = one;
+    in.back().ind2 = one;
+    in.back().ind3 = DI_r(n, m);
 
     if(n!=m)
     {
@@ -285,6 +303,12 @@ void DI_im_maker(std::list<OperatorElement>& in, const std::vector<double>& para
     }
 
     in.push_back(OperatorElement());
+    in.back().coe = - G;
+    in.back().ind1 = one;
+    in.back().ind2 = one;
+    in.back().ind3 = DI_i(n, m);
+
+    in.push_back(OperatorElement());
     in.back().coe = 2.0*L;
     in.back().ind1 = one;
     in.back().ind2 = DI_r(m,m);
@@ -418,6 +442,13 @@ void Da_re_maker(std::list<OperatorElement>& in, const std::vector<double>& para
         in.back().ind2 = one;
         in.back().ind3 = Da_i(n + 1, m);
     }
+
+    in.push_back(OperatorElement());
+    in.back().coe = - G;
+    in.back().ind1 = one;
+    in.back().ind2 = one;
+    in.back().ind3 = Da_r(n, m);
+
     //-------------------------------------------
     in.push_back(OperatorElement());
     in.back().coe = -2.0*L;
@@ -570,6 +601,12 @@ void Da_im_maker(std::list<OperatorElement>& in, const std::vector<double>& para
         in.back().ind2 = one;
         in.back().ind3 = Da_r(n + 1, m);
     }
+
+    in.push_back(OperatorElement());
+    in.back().coe = - G;
+    in.back().ind1 = one;
+    in.back().ind2 = one;
+    in.back().ind3 = Da_i(n, m);
 
     in.push_back(OperatorElement());
     in.back().coe = 2.0*L;

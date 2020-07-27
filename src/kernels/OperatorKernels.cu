@@ -9,8 +9,8 @@ __global__ void DeviceProceedVector(double* out, const double* in,
 	if(id < dim)
 	{
         out[id] = 0;
-        OperatorElement* m_oper = oper + 24 * id;
-        for(unsigned int ind = 0; ind < 24; ind ++)
+        OperatorElement* m_oper = oper + 25 * id;
+        for(unsigned int ind = 0; ind < 25; ind ++)
         {
             out[id] += m_oper[ind].coe * in[m_oper[ind].ind1] * in[m_oper[ind].ind2] * in[m_oper[ind].ind3];
         }
